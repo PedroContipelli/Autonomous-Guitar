@@ -3,7 +3,7 @@ from LookupTables import notes, mute_tracks
 from utils import clamp
 
 # input_filenames = ['Africa']
-input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
+input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
 # input_filenames = ['Mario']
 
 # Find shift that minimizes the number of notes outside of our playable range
@@ -40,11 +40,15 @@ for input_filename in input_filenames:
     kept_tracks = remove_muted_tracks(input_filename, input_file.tracks)
     input_track = mido.merge_tracks(kept_tracks)
 
-    outputTrack = mido.MidiTrack()
+    output_track = mido.MidiTrack()
+    # Set instrument to "acoustic guitar (steel string)"
+    output_track.append(mido.Message(type='program_change', channel=0, program=25, time=0))
+
+    note_states = [False for i in range(100)]
 
     for msg in input_track:
         if msg.type.startswith('note'):
-            # Range compression
+            # Shift all notes to maximize notes in playable range
             msg.note += best_shift
 
             # Outlier notes compression into playable range (E2 - G#4)
@@ -53,11 +57,24 @@ for input_filename in input_filenames:
             while msg.note < 40:
                 msg.note += 12
 
-        outputTrack.append(msg)
+            # Set all notes to same instrument channel
+            msg.channel = 0
+
+            if msg.type == 'note_on' and note_states[msg.note]:
+                    output_track.append(mido.Message('note_off', channel=0, note=msg.note, velocity=0, time=msg.time))
+                    msg.time = 0 # Starting new note where previous ended
+
+            note_states[msg.note] = (msg.type == 'note_on')
+
+        # Skip any instructions to change instrument
+        if msg.type == 'program_change':
+            continue
+
+        output_track.append(msg)
 
     output_file = mido.MidiFile()
-    slow_factor = 1
-    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slow_factor)
+    slowdown_factor = 1
+    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor)
 
-    output_file.tracks.append(outputTrack)
+    output_file.tracks.append(output_track)
     output_file.save(f'./MIDIs/{input_filename}_Output.mid')
