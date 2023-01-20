@@ -1,6 +1,6 @@
 import mido
 from LookupTables import notes, mute_tracks
-from utils import clamp
+from utils import clamp, string_of
 
 # input_filenames = ['Africa']
 input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
@@ -44,7 +44,9 @@ for input_filename in input_filenames:
     # Set instrument to "acoustic guitar (steel string)"
     output_track.append(mido.Message(type='program_change', channel=0, program=25, time=0))
 
-    note_states = [False for i in range(100)]
+    # Holds last note to be played on string (or 0 if none)
+    # Strings are 1-indexed as per musical convention
+    string_state = [0 for i in range(7)]
 
     for msg in input_track:
         if msg.type.startswith('note'):
@@ -60,11 +62,14 @@ for input_filename in input_filenames:
             # Set all notes to same instrument channel
             msg.channel = 0
 
-            if msg.type == 'note_on' and note_states[msg.note]:
-                    output_track.append(mido.Message('note_off', channel=0, note=msg.note, velocity=0, time=msg.time))
+            guitar_string = string_of(msg.note)
+
+            # Rate-limiting so no two notes on the same string can be played at the same time
+            if msg.type == 'note_on' and string_state[guitar_string]:
+                    output_track.append(mido.Message('note_off', channel=0, note=string_state[guitar_string], velocity=0, time=msg.time))
                     msg.time = 0 # Starting new note where previous ended
 
-            note_states[msg.note] = (msg.type == 'note_on')
+            string_state[guitar_string] = msg.note if (msg.type == 'note_on') else 0
 
         # Skip any instructions to change instrument
         if msg.type == 'program_change':
@@ -73,7 +78,7 @@ for input_filename in input_filenames:
         output_track.append(msg)
 
     output_file = mido.MidiFile()
-    slowdown_factor = 1
+    slowdown_factor = 1.25
     output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor)
 
     output_file.tracks.append(output_track)
