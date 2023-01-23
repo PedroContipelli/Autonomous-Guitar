@@ -59,3 +59,26 @@ def remove_muted_tracks(input_filename, input_tracks):
     for mute_track in mute_tracks.get(input_filename):
         del input_tracks[mute_track]
     return input_tracks
+
+def remove_short_notes(track, shorter_than_ticks):
+    on_index = 0
+    while on_index < len(track):
+        on_msg = track[on_index]
+        if is_note_on(on_msg):
+            on_note = on_msg.note
+            note_duration = 0
+            off_index = on_index
+            off_msg = track[off_index]
+            while not (is_note_off(off_msg) and off_msg.note == on_note):
+                off_index += 1
+                off_msg = track[off_index]
+                note_duration += off_msg.time
+
+            if note_duration < shorter_than_ticks:
+                track[off_index + 1].time += off_msg.time
+                del track[off_index]
+                track[on_index + 1].time += on_msg.time
+                del track[on_index]
+                continue
+        on_index += 1
+    return track

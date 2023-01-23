@@ -1,6 +1,6 @@
 import mido
 from LookupTables import notes
-from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks
+from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
 
 input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
 # input_filenames = ['Mario']
@@ -52,6 +52,8 @@ for input_filename in input_filenames:
     # End final notes
     for off_note in last_note_played_on.values():
         output_track.append(mido.Message('note_off', note=off_note, time=200))
+
+    output_track = remove_short_notes(output_track, shorter_than_ticks=50)
 
     output_file = mido.MidiFile()
     slowdown_factor = 1
