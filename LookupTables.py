@@ -30,7 +30,7 @@ notes = {40 : "String 6 - Open   | E  (2)",
 
 # Tracks that are unplayable on the guitar such as percussion, synth, etc
 # Listed in reverse order for easier removal
-mute_tracks = {"Africa" : [18, 17, 16, 15, 14, 13, 12, 11, 10],
+mute_tracks = {"Africa" : [18, 17, 16, 15, 14, 13, 12, 11, 10, 7, 6],
                "Aladdin": [13, 10],
                "AllNotesTest": [],
                "CountryRoads": [10],
