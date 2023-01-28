@@ -36,24 +36,36 @@ def compress_outliers(note):
         note += 12
     return note
 
-# Find shift that minimizes the number of notes outside of our playable range
+# Find minimum shift that maximizes the number of notes in our playable range
 def find_best_shift(track):
-    note_counts = [0 for i in range(100)]
+    # Will store 2 * total times note n is played in note_counts[n] (1 for note_on & 1 for note_off)
+    note_counts = [0 for i in range(120)]
 
+    # Loop through song counting up all notes
     for msg in track:
         if msg.type.startswith('note'):
             note_counts[msg.note] += 1
 
+    # Keep running sum of our note range size starting at note 0
     running_sum = sum(note_counts[0:29])
     running_sums = [running_sum]
 
-    for i in range(71):
+    # Calculate sums of same range shifted by 1 each time
+    for i in range(91):
         running_sums.append(running_sums[i] + note_counts[i+29] - note_counts[i])
 
-    best_range_start = running_sums.index(max(running_sums))
-    best_shift = 40 - best_range_start # 40 is the first note in our playable range
-    # print("Best shift:", best_shift)
-    return best_shift
+    # 40 is the first note in our playable range
+    # So best start note for range is the closest to 40 that maximizes notes played
+    max_notes_played = max(running_sums)
+
+    # Example for why sign is negated (-shift):
+    # If best start note is 42, notes shift "down" by 2 so that 42 becomes 40
+    for shift in range(25):
+        if running_sums[40 + shift] == max_notes_played:
+            return -shift
+        if running_sums[40 - shift] == max_notes_played:
+            return shift
+    return "ERROR"
 
 def remove_muted_tracks(input_filename, input_tracks):
     for mute_track in mute_tracks.get(input_filename):

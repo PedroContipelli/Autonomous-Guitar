@@ -33,6 +33,7 @@ for input_filename in input_filenames:
             msg.note += best_shift # Shift all notes to maximize amount in playable range (E2 - G#4)
             msg.note = compress_outliers(msg.note) # Any leftover notes raised/lowered in octaves to fit
             msg.channel = 0 # Set all notes to same instrument channel
+            msg.velocity = 64 # All notes at same volume
 
             # Force end last note on current string so new note can be played
             guitar_string = string_of(msg.note)
