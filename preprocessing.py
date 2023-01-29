@@ -1,5 +1,4 @@
 import mido
-from LookupTables import notes
 from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
 
 input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
@@ -7,7 +6,7 @@ input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', '
 
 for input_filename in input_filenames:
     print(f'Preprocessing {input_filename}...')
-    input_file = mido.MidiFile(f'./MIDIs/{input_filename}.mid')
+    input_file = mido.MidiFile(f'MIDIs/{input_filename}.mid')
 
     all_tracks = mido.merge_tracks(input_file.tracks)
     best_shift = find_best_shift(all_tracks)
@@ -51,8 +50,12 @@ for input_filename in input_filenames:
         output_track.append(msg)
 
     # End final notes
+    wait_first = 50
     for off_note in last_note_played_on.values():
-        output_track.append(mido.Message('note_off', note=off_note, time=200))
+        if off_note == 0:
+            continue
+        output_track.append(mido.Message('note_off', note=off_note, time=wait_first))
+        wait_first = 0
 
     output_track = remove_short_notes(output_track, shorter_than_ticks=50)
 
@@ -61,4 +64,4 @@ for input_filename in input_filenames:
     output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor)
 
     output_file.tracks.append(output_track)
-    output_file.save(f'./MIDIs/{input_filename}_Output.mid')
+    output_file.save(f'MIDIs/{input_filename}_Output.mid')
