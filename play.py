@@ -1,5 +1,6 @@
 import mido, utils
 from LookupTables import human_notes, servo_label, play_servos
+from Servo_Controller import servo_write
 
 play_file = "Twinkle_Output"
 
@@ -31,6 +32,10 @@ def play_guitar_note(msg, print_human_notes=False, debug=False):
 
     # Update last note played
     last_fret_played_on[strum_motor] = fret_motor
+
+
+    # WRITE ALL SERVOS
+    servo_write(servo_state)
 
     if print_human_notes:
         print("Playing", human_notes[msg.note])

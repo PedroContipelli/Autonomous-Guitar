@@ -1,19 +1,6 @@
 from machine import Pin
 import time
 
-def main():
-    num_servos = 3
-    cycles = 10
-
-    for i in range(num_servos):
-        servo_state = [0 for _ in range(num_servos)]
-        servo_state[i] = 1
-        servo_write() # WRITE ALL
-        time.sleep(1)
-
-    servo_state = [0 for _ in range(num_servos)]
-    servo_write() # CLEAR ALL
-
 led = Pin(2, Pin.OUT)
 SERIAL_OUT = Pin(0, Pin.OUT)
 RCLK = Pin(4, Pin.OUT)
@@ -31,15 +18,19 @@ def store():
   RCLK.value(1)
   RCLK.value(0)
 
-def servo_write():
+cycles = 10
+
+def servo_write(servo_state):
   for _ in range(cycles):
     min_angle = 100
     max_angle = 900
 
     output(1)
-    shift(num_servos)
+    shift(30)
     store()
     time.sleep_us(min_angle)
+
+    num_servos = 30
 
     for i in range(num_servos):
       output(servo_state[num_servos - i - 1])
@@ -51,5 +42,3 @@ def servo_write():
     shift(num_servos)
     store()
     time.sleep_us(20000-max_angle)
-
-main()
