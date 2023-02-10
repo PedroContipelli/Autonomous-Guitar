@@ -9,7 +9,7 @@ SRCLK = Pin(16, Pin.OUT)
 num_servos = 24
 servo_states = [0 for _ in range(num_servos)]
 cycles = 10
-wait_time = 0.5
+wait_time = 0.20
 
 def main():
     servo_write()

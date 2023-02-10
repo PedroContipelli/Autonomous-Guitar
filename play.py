@@ -1,15 +1,20 @@
-import mido, utils
+import umidiparser
+import utime
 from LookupTables import human_notes, servo_label, play_servos
 from Servo_Controller import servo_write
 
 play_file = "Twinkle_Output"
-
 servo_states = [0 for i in range(31)]
 last_fret_played_on = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
 
-def play_guitar_note(msg, print_human_notes=False, debug=False):
+def main():
+    for msg in umidiparser.MidiFile(f"{play_file}.mid").play():
+        if msg.status == umidiparser.NOTE_ON:
+            play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
 
-    fret_motor, strum_motor = play_servos[msg.note]
+def play_guitar_note(note, print_human_notes=False, debug=False):
+
+    fret_motor, strum_motor = play_servos[note]
     previous_fret = last_fret_played_on[strum_motor]
 
     if previous_fret != fret_motor:
@@ -37,8 +42,7 @@ def play_guitar_note(msg, print_human_notes=False, debug=False):
     servo_write(servo_states)
 
     if print_human_notes:
-        print("Playing", human_notes[msg.note])
+        print("Playing", human_notes[note])
 
-for msg in mido.MidiFile(f"MIDIs/{play_file}.mid").play():
-    if utils.is_note_on(msg):
-        play_guitar_note(msg, print_human_notes=True, debug=False)
+if __name__ == "__main__":
+    main()
