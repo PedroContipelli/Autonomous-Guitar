@@ -65,3 +65,4 @@ for input_filename in input_filenames:
 
     output_file.tracks.append(output_track)
     output_file.save(f'MIDIs/{input_filename}_Output.mid')
+    output_file.save(f'ESP32/MIDIs/{input_filename}_Output.mid')
