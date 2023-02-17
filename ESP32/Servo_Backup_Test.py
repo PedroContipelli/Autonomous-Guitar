@@ -6,7 +6,8 @@ SER = Pin(0, Pin.OUT)
 RCLK = Pin(4, Pin.OUT)
 SRCLK = Pin(16, Pin.OUT)
 
-num_servos = 24
+# DOES NOT ACCOUNT FOR PHYSICAL MAPPING
+num_servos = 30
 servo_states = [0 for _ in range(num_servos)]
 cycles = 10
 wait_time = 0.20
@@ -41,24 +42,24 @@ def store():
 def servo_write():
   for _ in range(cycles):
     min_angle = 100
-    max_angle = 900
+    max_angle = 500
 
     output(1)
     shift(num_servos)
     store()
     time.sleep_us(min_angle)
 
-    for i in range(num_servos):
-      output(servo_states[num_servos - i - 1])
+    for servo in range(num_servos, 0, -1):
+      output(1 - servo_states[servo])
       shift(1)
 
     store()
-    time.sleep_us(max_angle-min_angle)
+    time.sleep_us(max_angle - min_angle)
 
     output(0)
     shift(num_servos)
     store()
-    time.sleep_us(20000 - max_angle)
+    time.sleep_us(20_000 - max_angle)
 
 if __name__ == "__main__":
     main()
