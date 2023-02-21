@@ -12,5 +12,5 @@ Playing performed on ESP32 using umidiparser MicroPython library
 2. Clone git repo `https://github.com/ethanpartidas/Autonomous-Guitar.git`
 4. Find folder and `cd Autonomous-Guitar` into it
 5. Run `preprocessing.py`
-6. `ampy --port COM3 put ESP32`  (might take 2-3 mins, folder contains all used files)
+6. `ampy --port COM3 put ESP32`  (could take 2-10 mins, folder contains all used files)
 7. Run `ESP32/play.py` from MicroPython Device
