@@ -1,3 +1,6 @@
+import uos
+uos.chdir('ESP32')
+
 from LookupTables import physical_map
 from machine import Pin
 import time
@@ -6,19 +9,20 @@ led = Pin(2, Pin.OUT)
 SER = Pin(0, Pin.OUT)
 RCLK = Pin(4, Pin.OUT)
 SRCLK = Pin(16, Pin.OUT)
-cycles = 10
+cycles = 100
 
 def main_test():
     num_servos = 30
     virtual_states = [0 for _ in range(num_servos + 1)]
-    wait_time = 0.20
+    wait_time = 0.10
+    test_servos = [1, 30]
 
     # Reset to starting position
     servo_write(virtual_states)
     time.sleep(wait_time)
 
     # Counts up powering ON and OFF each servo once
-    for servo in range(num_servos):
+    for servo in range(test_servos[0], test_servos[1] + 1):
       print(f"Servo #{servo} ON\n")
       virtual_states[servo] = 1
       servo_write(virtual_states)
