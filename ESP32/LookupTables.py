@@ -1,4 +1,5 @@
-# Virtual -> Physical Servo #
+# Physical -> Virtual Servo #
+# CHANGE LEFT COLUMN ONLY
 physical_map = {
     1 : 1,
     2 : 2,

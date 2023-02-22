@@ -9,29 +9,42 @@ led = Pin(2, Pin.OUT)
 SER = Pin(0, Pin.OUT)
 RCLK = Pin(4, Pin.OUT)
 SRCLK = Pin(16, Pin.OUT)
-cycles = 100
+
+num_servos = 30
+virtual_states = [0 for _ in range(num_servos + 1)]
+cycles = 50
+extra_wait_time = 0.20 # in seconds
 
 def main_test():
-    num_servos = 30
-    virtual_states = [0 for _ in range(num_servos + 1)]
-    wait_time = 0.10
-    test_servos = [1, 30]
+    # Resets to starting position
+    alignment()
 
-    # Reset to starting position
+    # Test all in this range (inclusive)
+    test_range(min=1, max=30, reps=3)
+
+    # FOR MAPPING:
+    # Run test_range() with reps=3 and write down sequence of which physical
+    # servos are played in left column of "physical_map" in LookupTables.py
+
+# Set all to 0 or 1
+def alignment(set_to=0):
+    virtual_states = [set_to for _ in range(num_servos + 1)]
     servo_write(virtual_states)
-    time.sleep(wait_time)
+    time.sleep(extra_wait_time)
 
-    # Counts up powering ON and OFF each servo once
-    for servo in range(test_servos[0], test_servos[1] + 1):
-      print(f"Servo #{servo} ON\n")
-      virtual_states[servo] = 1
-      servo_write(virtual_states)
-      time.sleep(wait_time)
+# Counts up powering each servo ON and OFF once
+def test_range(min=1, max=num_servos, reps=1):
+    for servo in range(min, max + 1):
+      for _ in range(reps):
+          print(f"Servo #{servo} ON\n")
+          virtual_states[servo] = 1
+          servo_write(virtual_states)
+          time.sleep(extra_wait_time)
 
-      print(f"Servo #{servo} OFF\n")
-      virtual_states[servo] = 0
-      servo_write(virtual_states)
-      time.sleep(wait_time)
+          print(f"Servo #{servo} OFF\n")
+          virtual_states[servo] = 0
+          servo_write(virtual_states)
+          time.sleep(extra_wait_time)
 
 def output(value):
   SER.value(value)
