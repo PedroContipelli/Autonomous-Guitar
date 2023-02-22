@@ -15,10 +15,10 @@ N = 14.5; // arm length
 O = 1.5; // arm thickness
 P = H/3; // width of wire
 servo_box_across = D * 4.5;
-mount_height = 5;
-mount_thickness = 11;
-mount_across = 120;
-mount_cut_across = 100;
+mount_height = 15; // Needs to be measured exactly
+mount_thickness = 20;
+mount_across = 130;
+mount_cut_across = 112;
 inf = 100;
 $fn = 50;
 
