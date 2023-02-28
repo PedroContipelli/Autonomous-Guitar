@@ -12,15 +12,16 @@ SRCLK = Pin(16, Pin.OUT)
 
 num_servos = 30
 virtual_states = [0 for _ in range(num_servos + 1)]
-cycles = 50
-extra_wait_time = 0.20 # in seconds
+cycles = 20
+extra_wait_time = 0.10 # in seconds
 
 def main_test():
     # Resets to starting position
     alignment()
 
     # Test all in this range (inclusive)
-    test_range(min=1, max=30, reps=3)
+    while True:
+        test_range(min=1, max=24, reps=1)
 
     # FOR MAPPING:
     # Run test_range() with reps=3 and write down sequence of which physical
@@ -63,11 +64,20 @@ def servo_write(servo_states):
   num_servos = len(servo_states) - 1
 
   for _ in range(cycles):
-    min_angle = 100
-    max_angle = 500
-
-    output(1)
-    shift(num_servos)
+    min_angle = 100 # microseconds
+    max_angle = 500 # microseconds
+        
+    # Controls whether servo is operating or completely OFF
+    for virtual_servo in range(num_servos, 0, -1):
+      # Allows adaptability to physical wiring changes
+      true_servo = physical_map[virtual_servo]
+      
+      prev_state = previous_states[true_servo]
+      current_state = servos_states[true_servo]
+      
+      # We only want servo to be COMPLETELY OFF after it has already unfretted
+      output(prev_state or current_state)
+      shift(1) # Only shifting a single bit into one servo
     store()
     time.sleep_us(min_angle)
 
@@ -75,16 +85,23 @@ def servo_write(servo_states):
     for virtual_servo in range(num_servos, 0, -1):
       # Allows adaptability to physical wiring changes
       true_servo = physical_map[virtual_servo]
-      output(1 - servo_states[true_servo])
-      shift(1)
-
+      
+      prev_state = previous_states[true_servo]
+      current_state = servos_states[true_servo]
+      
+      # We only want servo to FRET UP if previous state was fret down
+      output((not current_state) and prev_state)
+      
+      shift(1) # Only shifting a single bit into one servo
     store()
     time.sleep_us(max_angle - min_angle)
 
     output(0)
-    shift(num_servos)
+    shift(num_servos) # Shifting 0 into ALL servos
     store()
     time.sleep_us(20_000 - max_angle)
+    
+  previous_states = servo_states.copy()
 
 if __name__ == "__main__":
     main_test()
