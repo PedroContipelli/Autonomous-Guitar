@@ -19,18 +19,71 @@ mount_height = 15; // Needs to be measured exactly
 mount_thickness = 20;
 mount_across = 130;
 mount_cut_across = 112;
-inf = 100;
+inf = 200;
+epsilon = 0.01;
 $fn = 50;
 
 sound_hole_diameter = 100;
 string_height = 14;
 string_spacing = 50/5;
 string_diameter = 1.5;
+string_clearance = 4;
 
-guitar();
+wall_thickness = 4.5;
+
+flange_length = 20;
+
+modeling();
+//printing();
+
+module printing() {
+    for (i = [0:1]) {
+        translate([i*(B+3*wall_thickness),0,(A-F)+wall_thickness])
+        rotate([0,-90,0])
+        difference() {
+            mount();
+            
+            translate([inf/2,0,0])
+            cube([inf,inf,inf],center=true);
+        }
+    }
+}
+
+module modeling() {
+    guitar();
+    color("Gray")
+    mount();
+    
+    for (j = [0:1]) {
+        rotate([0,0,j*180])
+        for (i = [0:2]) {
+            translate([-A,(i-0.75)*2*string_spacing-D/2,string_height+string_clearance+wall_thickness-(E-B)/2])
+            servo();
+        }
+    }
+}
 
 module mount() {
-    
+    difference() {
+    translate([0,0,string_height+B/2+wall_thickness+string_clearance])
+    difference() {
+        union() {
+            cube([2*(A-F)+2*wall_thickness,5*string_spacing+D+2*wall_thickness,B+2*wall_thickness],center=true);
+            
+            translate([0,0,-(string_height+string_clearance+wall_thickness+B)/2])
+            cube([2*(A-F)+2*wall_thickness,sound_hole_diameter,string_height+string_clearance+wall_thickness],center=true);
+            
+            translate([0,0,-(string_height+string_clearance)-(wall_thickness+B)/2])
+                cube([2*(A-F)+2*wall_thickness,sound_hole_diameter+2*flange_length,wall_thickness],center=true);
+        }
+        
+        cube([inf,5*string_spacing+D,B],center=true);
+        
+        cube([2*(A-F),5*string_spacing+D,inf],center=true);
+    }
+    translate([0,0,(string_height+string_clearance)/2-epsilon])
+        cube([inf,sound_hole_diameter-2*wall_thickness,string_height+string_clearance],center=true);
+    }
 }
 
 module guitar() {
