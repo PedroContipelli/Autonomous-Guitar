@@ -14,7 +14,7 @@ num_servos = 30
 virtual_states = [0 for _ in range(num_servos + 1)]
 previous_states = [0 for _ in range(num_servos + 1)]
 cycles = 20
-extra_wait_time = 0.10 # in seconds
+extra_wait_time = 0.1 # in seconds
 
 def main_test():
     # Resets to starting position
@@ -22,7 +22,7 @@ def main_test():
 
     # Test all in this range (inclusive)
     while True:
-        test_range(min=1, max=24, reps=1)
+        test_range(min=1, max=30, reps=1)
 
     # FOR MAPPING:
     # Run test_range() with reps=3 and write down sequence of which physical
@@ -41,7 +41,6 @@ def test_range(min=1, max=num_servos, reps=1):
           print(f"Servo #{servo} ON\n")
           virtual_states[servo] = 1
           servo_write(virtual_states)
-          time.sleep(extra_wait_time)
 
           print(f"Servo #{servo} OFF\n")
           virtual_states[servo] = 0
@@ -65,8 +64,8 @@ def servo_write(servo_states):
   num_servos = len(servo_states) - 1
 
   for _ in range(cycles):
-    min_angle = 100 # microseconds
-    max_angle = 500 # microseconds
+    min_angle = 150 # microseconds
+    max_angle = 450 # microseconds
         
     # Controls whether servo is operating or completely OFF
     for virtual_servo in range(num_servos, 0, -1):
