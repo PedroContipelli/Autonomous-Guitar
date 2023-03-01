@@ -12,6 +12,7 @@ SRCLK = Pin(16, Pin.OUT)
 
 num_servos = 30
 virtual_states = [0 for _ in range(num_servos + 1)]
+previous_states = [0 for _ in range(num_servos + 1)]
 cycles = 20
 extra_wait_time = 0.10 # in seconds
 
@@ -73,7 +74,7 @@ def servo_write(servo_states):
       true_servo = physical_map[virtual_servo]
       
       prev_state = previous_states[true_servo]
-      current_state = servos_states[true_servo]
+      current_state = servo_states[true_servo]
       
       # We only want servo to be COMPLETELY OFF after it has already unfretted
       output(prev_state or current_state)
@@ -87,7 +88,7 @@ def servo_write(servo_states):
       true_servo = physical_map[virtual_servo]
       
       prev_state = previous_states[true_servo]
-      current_state = servos_states[true_servo]
+      current_state = servo_states[true_servo]
       
       # We only want servo to FRET UP if previous state was fret down
       output((not current_state) and prev_state)
@@ -101,7 +102,9 @@ def servo_write(servo_states):
     store()
     time.sleep_us(20_000 - max_angle)
     
-  previous_states = servo_states.copy()
+  # Python does not like previous_states = servo_states.copy() because it thinks prev_states is local variable
+  for i in range(num_servos + 1):
+      previous_states[i] = servo_states[i]
 
 if __name__ == "__main__":
     main_test()
