@@ -54,11 +54,15 @@ module modeling() {
     color("Gray")
     mount();
     
+    many() servo();
+}
+
+module many() {
     for (j = [0:1]) {
         rotate([0,0,j*180])
         for (i = [0:2]) {
             translate([-A,(i-0.75)*2*string_spacing-D/2,string_height+string_clearance+wall_thickness-(E-B)/2])
-            servo();
+            children(0);
         }
     }
 }
@@ -77,12 +81,14 @@ module mount() {
                 cube([2*(A-F)+2*wall_thickness,sound_hole_diameter+2*flange_length,wall_thickness],center=true);
         }
         
-        cube([inf,5*string_spacing+D,B],center=true);
+        //cube([inf,5*string_spacing+D,B],center=true);
         
         cube([2*(A-F),5*string_spacing+D,inf],center=true);
     }
-    translate([0,0,(string_height+string_clearance)/2-epsilon])
+        translate([0,0,(string_height+string_clearance)/2-epsilon])
         cube([inf,sound_hole_diameter-2*wall_thickness,string_height+string_clearance],center=true);
+    
+        many() servo_hole();
     }
 }
 
@@ -122,4 +128,8 @@ module servo() {
             rotate([0, 90, 0]) cylinder(O, L/2*(1-i) + M/2*i,
                                            L/2*(1-i) + M/2*i);
     }
+}
+
+module servo_hole() {
+    translate([0, 0, (E-B)/2-P]) cube([I, D, B+P]);
 }
