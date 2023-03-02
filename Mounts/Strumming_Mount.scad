@@ -1,9 +1,9 @@
-A = 31;
-B = 23;
-C = 26;
-D = 12;
-E = 32;
-F = 15;
+A = 31; // height
+B = 23; // main body length
+C = 26; // height before arm
+D = 12; // width
+E = 32; // full length
+F = 15; // height until mounting points
 G = 5; // from bottom of servo to top of wires
 H = 4; // width of wires
 I = 22; // height of body
@@ -19,37 +19,93 @@ mount_height = 15; // Needs to be measured exactly
 mount_thickness = 20;
 mount_across = 130;
 mount_cut_across = 112;
-inf = 100;
+inf = 200;
+epsilon = 0.01;
 $fn = 50;
 
-module servo_cut() {
-    translate([F, 0, -1-P]) cube([inf, D*1.5, inf]);
+sound_hole_diameter = 100;
+string_height = 14;
+string_spacing = 50/5;
+string_diameter = 1.5;
+string_clearance = 4;
+
+wall_thickness = 4.5;
+
+flange_length = 20;
+
+modeling();
+//printing();
+
+module printing() {
+    for (i = [0:1]) {
+        translate([i*(B+3*wall_thickness),0,(A-F)+wall_thickness])
+        rotate([0,-90,0])
+        difference() {
+            mount();
+            
+            translate([inf/2,0,0])
+            cube([inf,inf,inf],center=true);
+        }
+    }
 }
 
-module half() {
-    color("Gray") difference() {
+module modeling() {
+    guitar();
+    color("Gray")
+    mount();
+    
+    many() servo();
+}
+
+module many() {
+    for (j = [0:1]) {
+        rotate([0,0,j*180])
+        for (i = [0:2]) {
+            translate([-A,(i-0.75)*2*string_spacing-D/2,string_height+string_clearance+wall_thickness-(E-B)/2])
+            children(0);
+        }
+    }
+}
+
+module mount() {
+    difference() {
+    translate([0,0,string_height+B/2+wall_thickness+string_clearance])
+    difference() {
         union() {
-        // servo_container
-        translate([0, 0, -P]) cube([A, servo_box_across, E+P]);
- 
-        // mount (-Pedro)
-        translate([0, -(mount_across - servo_box_across)/2, -mount_height])
-            cube([A, mount_across, mount_thickness]);
+            cube([2*(A-F)+2*wall_thickness,5*string_spacing+D+2*wall_thickness,B+2*wall_thickness],center=true);
+            
+            translate([0,0,-(string_height+string_clearance+wall_thickness+B)/2])
+            cube([2*(A-F)+2*wall_thickness,sound_hole_diameter,string_height+string_clearance+wall_thickness],center=true);
+            
+            translate([0,0,-(string_height+string_clearance)-(wall_thickness+B)/2])
+                cube([2*(A-F)+2*wall_thickness,sound_hole_diameter+2*flange_length,wall_thickness],center=true);
         }
         
-        // mount x-axis cut (-Pedro)
-        translate([-1, -(mount_cut_across - servo_box_across)/2, -(mount_height+1)])
-            cube([inf, mount_cut_across, mount_height]);
-
-        // z-axis cuts for servos
-        translate([-10, D*0.5, 0]) servo_cut();
-        translate([-5, D*1.5, 0]) servo_cut();
-        translate([0, D*2.5, 0]) servo_cut();
+        //cube([inf,5*string_spacing+D,B],center=true);
         
-        // x-axis cut for servos
-        translate([-1, D, (E - B)/2-P]) cube([inf, D*3, B+P]);
+        cube([2*(A-F),5*string_spacing+D,inf],center=true);
     }
-    servos();
+        translate([0,0,(string_height+string_clearance)/2-epsilon])
+        cube([inf,sound_hole_diameter-2*wall_thickness,string_height+string_clearance],center=true);
+    
+        many() servo_hole();
+    }
+}
+
+module guitar() {
+    color("#804000")
+    difference() {
+        translate([0,0,-1])
+        cube([1.5*sound_hole_diameter, 1.5*sound_hole_diameter, 1], center=true);
+        
+        cylinder(20, sound_hole_diameter/2, sound_hole_diameter/2, center=true);
+    }
+    
+    for (i = [0:5]) {
+        translate([-0.75*sound_hole_diameter,(i-2.5)*string_spacing,string_height])
+        rotate([0,90,0])
+        cylinder(1.5*sound_hole_diameter, string_diameter/2, string_diameter/2);
+    }
 }
 
 module servo() {
@@ -74,11 +130,6 @@ module servo() {
     }
 }
 
-module servos() {
-    translate([-10, D, 0]) servo();
-    translate([-5, D*2, 0]) servo();
-    translate([0, D*3, 0]) servo();
+module servo_hole() {
+    translate([0, 0, (E-B)/2-P]) cube([I, D, B+P]);
 }
-
-half();
-translate([A*2, D*4.5, 0]) rotate([0, 0, 180]) half();
