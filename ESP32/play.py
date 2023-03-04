@@ -47,10 +47,8 @@ def play_guitar_note(note, print_human_notes=False, debug=False):
     last_fret_played_on[strum_motor] = fret_motor
 
     # WRITE ALL SERVOS
-    previous_states_local = servo_write(servo_states, previous_states)
-    
-    for i in range(len(previous_states_local)):
-        previous_states[i] = previous_states_local[i]
+    global previous_states
+    previous_states = servo_write(servo_states, previous_states)
 
 if __name__ == "__main__":
     main()
