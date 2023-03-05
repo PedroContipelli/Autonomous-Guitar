@@ -14,24 +14,22 @@ M = 4; // minor diameter of arm
 N = 14.5; // arm length
 O = 1.5; // arm thickness
 P = H/3; // width of wire
-servo_box_across = D * 4.5;
-mount_height = 15; // Needs to be measured exactly
-mount_thickness = 20;
-mount_across = 130;
-mount_cut_across = 112;
 inf = 200;
 epsilon = 0.01;
 $fn = 50;
 
-sound_hole_diameter = 100;
+sound_hole_diameter = 107;
 string_height = 14;
 string_spacing = 50/5;
 string_diameter = 1.5;
-string_clearance = 4;
+string_clearance = 2;
 
 wall_thickness = 4.5;
 
 flange_length = 20;
+
+black_panel_height = 0.8;
+extra_horizontal_spacing = 15;
 
 modeling();
 //printing();
@@ -72,18 +70,23 @@ module mount() {
     translate([0,0,string_height+B/2+wall_thickness+string_clearance])
     difference() {
         union() {
-            cube([2*(A-F)+2*wall_thickness,5*string_spacing+D+2*wall_thickness,B+2*wall_thickness],center=true);
+            cube([2*(A-F)+2*wall_thickness,5*string_spacing+D+2*wall_thickness+extra_horizontal_spacing,B+2*wall_thickness],center=true);
             
             translate([0,0,-(string_height+string_clearance+wall_thickness+B)/2])
             cube([2*(A-F)+2*wall_thickness,sound_hole_diameter,string_height+string_clearance+wall_thickness],center=true);
             
-            translate([0,0,-(string_height+string_clearance)-(wall_thickness+B)/2])
+            difference() {
+                translate([0,0,-(string_height+string_clearance)-(wall_thickness+B)/2])
                 cube([2*(A-F)+2*wall_thickness,sound_hole_diameter+2*flange_length,wall_thickness],center=true);
+                
+                translate([0,-(sound_hole_diameter/2+flange_length/2),-(string_height+string_clearance)-(wall_thickness+B)/2 - 2])
+                cube([2*(A-F)+2*wall_thickness+epsilon,flange_length+epsilon,black_panel_height],center=true);
+            }
         }
         
-        //cube([inf,5*string_spacing+D,B],center=true);
+        // cube([inf,5*string_spacing+D,B],center=true);
         
-        cube([2*(A-F),5*string_spacing+D,inf],center=true);
+        cube([2*(A-F),5*string_spacing+D+extra_horizontal_spacing,inf],center=true);
     }
         translate([0,0,(string_height+string_clearance)/2-epsilon])
         cube([inf,sound_hole_diameter-2*wall_thickness,string_height+string_clearance],center=true);
@@ -106,6 +109,11 @@ module guitar() {
         rotate([0,90,0])
         cylinder(1.5*sound_hole_diameter, string_diameter/2, string_diameter/2);
     }
+    
+    color("#000000")
+    translate([0,0,string_height+B/2+wall_thickness+string_clearance])
+    translate([0,-(sound_hole_diameter/2+flange_length/2)-6,-(string_height+string_clearance)-(wall_thickness+B)/2 - 2])
+    cube([2*(A-F)+2*wall_thickness+10,flange_length+epsilon,black_panel_height],center=true);
 }
 
 module servo() {
