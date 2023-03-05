@@ -32,18 +32,27 @@ black_panel_height = 0.8;
 extra_horizontal_spacing = 15;
 
 modeling();
-//printing();
+// printing();
 
 module printing() {
-    for (i = [0:1]) {
-        translate([i*(B+3*wall_thickness),0,(A-F)+wall_thickness])
-        rotate([0,-90,0])
-        difference() {
-            mount();
-            
-            translate([inf/2,0,0])
-            cube([inf,inf,inf],center=true);
-        }
+    
+    translate([0*(B+3*wall_thickness),0,(A-F)+wall_thickness])
+    rotate([0,-90,0])
+    difference() {
+        mount();
+        
+        translate([inf/2,0,0])
+        cube([inf,inf,inf],center=true);
+    }
+    
+    translate([1*(B+3*wall_thickness),0,(A-F)+wall_thickness])
+    rotate([180,0,0])
+    rotate([0,-90,0])
+    difference() {
+        mount();
+        
+        translate([-inf/2,0,0])
+        cube([inf,inf,inf],center=true);
     }
 }
 
