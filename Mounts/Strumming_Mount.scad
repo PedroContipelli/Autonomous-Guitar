@@ -1,7 +1,7 @@
 A = 31; // height
 B = 23; // main body length
 C = 26; // height before arm
-D = 12; // width
+D = 12.5; // width
 E = 32; // full length
 F = 15; // height until mounting points
 G = 5; // from bottom of servo to top of wires
@@ -31,8 +31,8 @@ flange_length = 20;
 black_panel_height = 0.8;
 extra_horizontal_spacing = 15;
 
-modeling();
-// printing();
+// modeling();
+printing();
 
 module printing() {
     
