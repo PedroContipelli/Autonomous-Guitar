@@ -22,7 +22,7 @@ sound_hole_diameter = 107;
 string_height = 14;
 string_spacing = 50/5;
 string_diameter = 1.5;
-string_clearance = 2;
+string_clearance = 8;
 
 wall_thickness = 4.5;
 
