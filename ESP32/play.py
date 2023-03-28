@@ -1,7 +1,7 @@
 import uos
 uos.chdir('ESP32')
 
-import umidiparser
+from Libraries.umidiparser import MidiFile, NOTE_ON
 import utime
 import time
 from LookupTables import human_notes, servo_label, play_servos
@@ -14,8 +14,8 @@ previous_states = servo_states.copy()
 last_fret_played_on = {25:0, 26:0, 27:0, 28:0, 29:0, 30:0}
 
 def main():
-    for msg in umidiparser.MidiFile(f"MIDIs/{play_file}.mid").play():
-        if msg.status == umidiparser.NOTE_ON:
+    for msg in MidiFile(f"MIDIs/{play_file}.mid").play():
+        if msg.status == NOTE_ON:
             play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
         # time.sleep(1)
 

@@ -1,4 +1,3 @@
-# https://learn.adafruit.com/micropython-hardware-pca9685-pwm-and-servo-driver/circuitpython#dim-leds
 if __name__ == "__main__":
     import uos
     uos.chdir('ESP32')
@@ -6,7 +5,7 @@ if __name__ == "__main__":
 from LookupTables import servo_to_port
 from machine import Pin, SoftI2C
 import time
-from servo import Servos
+from Libraries.servo import Servos
 
 # initialize i2c object
 i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
