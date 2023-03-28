@@ -15,15 +15,19 @@ i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 driver1 = Servos(i2c, address=0x40)
 driver2 = Servos(i2c, address=0x41)
 
-down_angles = [110] * 24 + [120] * 6
-up_angles = [190] * 24 + [160] * 6
+down_angles = [0]  +  [110] * 24  +  [120] * 6
+up_angles   = [0]  +  [190] * 24  +  [160] * 6
 
-# FRET_DOWN, FRET_UP = 110, 190
-# STRUM_DOWN, STRUM_UP = 120, 160
+up_angles[29] = 170
+
+FRET_DOWN, FRET_UP = 110, 190
+STRUM_DOWN, STRUM_UP = 120, 160
 
 def main_test():
-    pass
+    alignment()
     # fret_test()
+    # strum_test()
+    # pass
 
 def servo_write(new_states, old_states):
     for servo in range(1, 31):
@@ -38,29 +42,20 @@ def servo_write(new_states, old_states):
             
     return new_states.copy() # which becomes old_states
 
-        
-def strum_test():
-    for strum in range(25,31):
-        print(f"STRUM DOWN {strum}")
-        set_servo_angle(strum, STRUM_DOWN)
-        time.sleep(1)
-        print(f"STRUM UP {strum}")
-        set_servo_angle(strum, STRUM_UP)
-        time.sleep(1)
-        print(f"RELEASE {strum}")
-        set_servo_angle(strum, -1)
-        time.sleep(1)
-        
-def fret_test():
-    for fret in range(17,19):
-        print(f"FRET DOWN {fret}")
-        set_servo_angle(fret, FRET_DOWN)
-        time.sleep(0.5)
-        print(f"FRET UP {fret}")
-        set_servo_angle(fret, FRET_UP)
-        time.sleep(0.5)
-        print(f"RELEASE {fret}")
-        set_servo_angle(fret, -1)
+def alignment():
+    test_range(1, 30, wait_between=0.20, align=True)
+
+def test_range(min, max, wait_between=0.5, align=False):
+    for servo in range(min, max+1):
+        if not align:
+            print(f"DOWN {servo}")
+            set_servo_state(servo, 1)
+            time.sleep(wait_between)
+        print(f"UP {servo}")
+        set_servo_state(servo, 0)
+        time.sleep(wait_between)
+        print(f"RELEASE {servo}\n")
+        idle(servo)
     
 def idle(servo):
     set_servo_angle(servo, -1)

@@ -3,6 +3,7 @@ uos.chdir('ESP32')
 
 import umidiparser
 import utime
+import time
 from LookupTables import human_notes, servo_label, play_servos
 from Servo_Controller import servo_write
 
@@ -16,6 +17,7 @@ def main():
     for msg in umidiparser.MidiFile(f"MIDIs/{play_file}.mid").play():
         if msg.status == umidiparser.NOTE_ON:
             play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
+        # time.sleep(1)
 
 def play_guitar_note(note, print_human_notes=False, debug=False):
     
@@ -37,6 +39,11 @@ def play_guitar_note(note, print_human_notes=False, debug=False):
             servo_states[fret_motor] = 1
             if debug:
                 print(f"ON {servo_label[fret_motor]} (Motor # {fret_motor})")
+                
+    # WRITE ALL SERVOS
+    global previous_states
+    previous_states = servo_write(servo_states, previous_states)
+    time.sleep(0.05)
 
     # STRUM
     servo_states[strum_motor] = 1 - servo_states[strum_motor]
