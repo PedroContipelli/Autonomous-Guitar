@@ -24,7 +24,7 @@ s.listen(5)
 
 while True:
     try:
-        play = 0;
+        start = 0;
         ftp.ftpserver(21)
         if gc.mem_free() < 102000:
             gc.collect()
@@ -35,7 +35,8 @@ while True:
         conn.settimeout(None)
         request = str(request)
         print('Get Request Content = %s' % request)
-        if play == 6:
+        start = request.find('/?play')
+        if start == 6:
             play.main()
         response = server_front()
         conn.send('HTTP/1.1 200 OK\n')
