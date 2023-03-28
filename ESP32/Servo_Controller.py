@@ -15,11 +15,29 @@ i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 driver1 = Servos(i2c, address=0x40)
 driver2 = Servos(i2c, address=0x41)
 
-FRET_DOWN, FRET_UP = 110, 190
-STRUM_DOWN, STRUM_UP = 120, 160
+down_angles = [110] * 24 + [120] * 6
+up_angles = [190] * 24 + [160] * 6
+
+# FRET_DOWN, FRET_UP = 110, 190
+# STRUM_DOWN, STRUM_UP = 120, 160
 
 def main_test():
-    fret_test()
+    pass
+    # fret_test()
+
+def servo_write(new_states, old_states):
+    for servo in range(1, 31):
+        new_state = new_states[servo]
+        old_state = old_states[servo]
+        
+        if new_state != old_state:
+            set_servo_state(servo, new_state)
+        # No change in STRUM or No change in FRET UP
+        elif 25 <= servo <= 30 or new_state == 0:
+            idle(servo)
+            
+    return new_states.copy() # which becomes old_states
+
         
 def strum_test():
     for strum in range(25,31):
@@ -44,8 +62,20 @@ def fret_test():
         print(f"RELEASE {fret}")
         set_servo_angle(fret, -1)
     
+def idle(servo):
+    set_servo_angle(servo, -1)
 
-def set_servo_angle(servo, degrees):
+def set_servo_state(servo, state):
+    if state == 1:
+        angle = down_angles[servo]
+    elif state == 0:
+        angle = up_angles[servo]
+    else:
+        print("ERROR")
+
+    set_servo_angle(servo, angle)
+
+def set_servo_angle(servo, angle):
     port = servo_to_port[servo] - 1
         
     if 0 <= port < 16:
@@ -57,11 +87,10 @@ def set_servo_angle(servo, degrees):
         print(f"Invalid servo index: {servo}")
         return
     
-    if degrees == -1:
+    if angle == -1:
         driver.release(index = port)
     else:
-        driver.position(index = port, degrees = degrees)
+        driver.position(index = port, degrees = angle)
 
 if __name__ == "__main__":
     main_test()
-
