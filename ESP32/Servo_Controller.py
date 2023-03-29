@@ -28,18 +28,9 @@ def main_test():
     # strum_test()
     # pass
 
-def servo_write(new_states, old_states):
-    for servo in range(1, 31):
-        new_state = new_states[servo]
-        old_state = old_states[servo]
-        
-        if new_state != old_state:
-            set_servo_state(servo, new_state)
-        # No change in STRUM or No change in FRET UP
-        elif 25 <= servo <= 30 or new_state == 0:
-            idle(servo)
-            
-    return new_states.copy() # which becomes old_states
+def servo_write(servo_states):
+    for servo, state in enumerate(servo_states[1:], start=1):
+        set_servo_state(servo, state)
 
 def alignment():
     test_range(1, 30, wait_between=0.20, align=True)
@@ -54,18 +45,17 @@ def test_range(min, max, wait_between=0.5, align=False):
         set_servo_state(servo, 0)
         time.sleep(wait_between)
         print(f"RELEASE {servo}\n")
-        idle(servo)
-    
-def idle(servo):
-    set_servo_angle(servo, -1)
+        set_servo_state(servo, -1)
 
 def set_servo_state(servo, state):
-    if state == 1:
-        angle = down_angles[servo]
+    if state == -1:
+        angle = -1
     elif state == 0:
         angle = up_angles[servo]
+    elif state == 1:
+        angle = down_angles[servo]
     else:
-        print("ERROR")
+        print(f"Invalid servo state: {state}")
 
     set_servo_angle(servo, angle)
 
