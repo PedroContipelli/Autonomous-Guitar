@@ -13,12 +13,12 @@ servo_states = [0] + [-1]*24 + [0]*6
 last_fret_played_on = {25:0, 26:0, 27:0, 28:0, 29:0, 30:0}
 
 def main():
-    for msg in MidiFile(f"MIDIs/{play_file}.mid").play():
+    alignment()
+    time.sleep(5)
+    
+    for msg in MidiFile(f"Play_MIDIs/{play_file}.mid").play():
         if msg.status == NOTE_ON:
             play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
-            
-    # END ON ALIGNMENT
-    alignment()
 
 def play_guitar_note(note, print_human_notes=False, debug=False):
     
