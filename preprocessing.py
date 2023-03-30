@@ -1,12 +1,13 @@
 import mido
 from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
+from ESP32.LookupTables import slowdown_factor, short_note_ticks
 
-input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'Twinkle', 'UnderTheSea', 'VivaLaVida']
+input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida']
 # input_filenames = ['Mario']
 
 for input_filename in input_filenames:
-    print(f'Preprocessing {input_filename}...')
-    input_file = mido.MidiFile(f'MIDIs/{input_filename}.mid')
+    print(f'Preprocessing {input_filename}...', f'\t\t\t\tSlowed down {slowdown_factor[input_filename]}x')
+    input_file = mido.MidiFile(f'Input_MIDIs/{input_filename}.mid')
 
     all_tracks = mido.merge_tracks(input_file.tracks)
     best_shift = find_best_shift(all_tracks)
@@ -57,12 +58,10 @@ for input_filename in input_filenames:
         output_track.append(mido.Message('note_off', note=off_note, time=wait_first))
         wait_first = 0
 
-    output_track = remove_short_notes(output_track, shorter_than_ticks=50)
+    output_track = remove_short_notes(output_track, shorter_than_ticks=short_note_ticks[input_filename])
 
     output_file = mido.MidiFile()
-    slowdown_factor = 1
-    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor)
+    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor[input_filename])
 
     output_file.tracks.append(output_track)
-    output_file.save(f'MIDIs/{input_filename}_Output.mid')
-    output_file.save(f'ESP32/MIDIs/{input_filename}_Output.mid')
+    output_file.save(f'Output_MIDIs/{input_filename}_Output.mid')

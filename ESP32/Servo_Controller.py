@@ -14,18 +14,25 @@ i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 driver1 = Servos(i2c, address=0x40)
 driver2 = Servos(i2c, address=0x41)
 
-down_angles = [0]  +  [110] * 24  +  [120] * 6
-up_angles   = [0]  +  [190] * 24  +  [160] * 6
+                      # FRETS     # STRUMS
+up_angles   = [0]  +  [170] * 24  +  [160] * 6
+down_angles = [0]  +  [80] * 24  +  [120] * 6
 
+# Special frets
+up_angles[18] = 190
+up_angles[3] = 190
+down_angles[1] = 80
+down_angles[7] = 80
+
+# Special strums
 up_angles[29] = 170
 
-FRET_DOWN, FRET_UP = 110, 190
-STRUM_DOWN, STRUM_UP = 120, 160
+# FRET_DOWN, FRET_UP = 110, 190
+# STRUM_DOWN, STRUM_UP = 120, 160
 
 def main_test():
-    alignment()
-    # fret_test()
-    # strum_test()
+    # alignment()
+    test_range(17,30)
     # pass
 
 def servo_write(servo_states):

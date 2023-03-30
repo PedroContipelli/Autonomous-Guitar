@@ -1,4 +1,3 @@
 __pycache__/
 .DS_Store
-testing.py
-MIDIs/*_Output.mid
+ESP32/Output_MIDIs
