@@ -1,5 +1,5 @@
 import mido
-from LookupTables import mute_tracks
+from ESP32.LookupTables import mute_tracks
 
 def clamp(minimum, x, maximum):
     return max(minimum, min(x, maximum))
@@ -68,7 +68,7 @@ def find_best_shift(track):
     return "ERROR"
 
 def remove_muted_tracks(input_filename, input_tracks):
-    for mute_track in mute_tracks.get(input_filename):
+    for mute_track in sorted(mute_tracks.get(input_filename), reverse=True):
         del input_tracks[mute_track]
     return input_tracks
 

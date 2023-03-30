@@ -104,21 +104,63 @@ human_notes = {
 # Tracks that are unplayable on the guitar such as percussion, synth, etc
 # Listed in reverse order for easier removal
 mute_tracks = {
-    "Africa" : [18, 17, 16, 15, 14, 13, 12, 11, 10, 7, 6],
+    "Africa" : [5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     "Aladdin": [13, 10],
     "AllNotesTest": [],
     "CountryRoads": [10],
     "Mario": [],
     "Mii": [],
     "OverlappingNotesTest": [],
-    "Pirates": [],
+    "Pirates": [2], # Empty list to add "left hand" bass notes
     "Rickroll": [],
     "Simpsons": [16, 15],
     "StillDre": [],
     "Tetris": [],
+    "TetrisModified": [],
     "Twinkle": [],
-    "UnderTheSea": [],
+    "UnderTheSea": [1,2,3,4,5,6,7,8,9 , 11,12,13],
+    "UnderTheSeaModified": [1,2,3,4,5,6,7,8,9 , 11,12,13],
     "VivaLaVida": []
+}
+
+slowdown_factor = {
+    "Africa" : 1.25,
+    "Aladdin": 1.3,
+    "AllNotesTest": 3.0,
+    "CountryRoads": 1.2,
+    "Mario": 1.2,
+    "Mii": 1.2,
+    "OverlappingNotesTest": 1.2,
+    "Pirates": 1.3,
+    "Rickroll": 1.3,
+    "Simpsons": 1.4,
+    "StillDre": 1.2,
+    "Tetris": 1.2,
+    "TetrisModified": 1.1,
+    "Twinkle": 1,
+    "UnderTheSea": 1.2,
+    "UnderTheSeaModified": 1.15,
+    "VivaLaVida": 1.1
+}
+
+short_note_ticks = {
+    "Africa" : 50,
+    "Aladdin": 100,
+    "AllNotesTest": 50,
+    "CountryRoads": 40,
+    "Mario": 50,
+    "Mii": 50,
+    "OverlappingNotesTest": 50,
+    "Pirates": 50,
+    "Rickroll": 100,
+    "Simpsons": 50,
+    "StillDre": 50,
+    "Tetris": 50,
+    "TetrisModified": 50,
+    "Twinkle": 50,
+    "UnderTheSea": 50,
+    "UnderTheSeaModified": 50,
+    "VivaLaVida": 30
 }
 
 # Note : [Fret Motor , String Motor]
