@@ -126,7 +126,7 @@ mute_tracks = {
 slowdown_factor = {
     "Africa" : 1.25,
     "Aladdin": 1.3,
-    "AllNotesTest": 3.0,
+    "AllNotesTest": 1.5,
     "CountryRoads": 1.2,
     "Mario": 1.2,
     "Mii": 1.2,
