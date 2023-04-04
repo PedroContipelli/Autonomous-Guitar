@@ -120,7 +120,10 @@ mute_tracks = {
     "Twinkle": [],
     "UnderTheSea": [1,2,3,4,5,6,7,8,9 , 11,12,13],
     "UnderTheSeaModified": [1,2,3,4,5,6,7,8,9 , 11,12,13],
-    "VivaLaVida": []
+    "VivaLaVida": [],
+    "HappyBirthday" : [],
+    "OdeToJoy": [],
+    "SmokeOnTheWater": []
 }
 
 slowdown_factor = {
@@ -140,7 +143,10 @@ slowdown_factor = {
     "Twinkle": 1,
     "UnderTheSea": 1.2,
     "UnderTheSeaModified": 1.15,
-    "VivaLaVida": 1.1
+    "VivaLaVida": 1.1,
+    "HappyBirthday" : 1.1,
+    "OdeToJoy": 1.1,
+    "SmokeOnTheWater": 1.1
 }
 
 short_note_ticks = {
@@ -160,7 +166,10 @@ short_note_ticks = {
     "Twinkle": 50,
     "UnderTheSea": 50,
     "UnderTheSeaModified": 50,
-    "VivaLaVida": 30
+    "VivaLaVida": 30,
+    "HappyBirthday" : 50,
+    "OdeToJoy": 50,
+    "SmokeOnTheWater": 50
 }
 
 # Note : [Fret Motor , String Motor]

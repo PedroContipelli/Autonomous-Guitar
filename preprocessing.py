@@ -2,7 +2,7 @@ import mido
 from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
 from ESP32.LookupTables import slowdown_factor, short_note_ticks
 
-input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida']
+input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida', 'HappyBirthday', 'OdeToJoy', 'SmokeOnTheWater']
 # input_filenames = ['Mario']
 
 for input_filename in input_filenames:

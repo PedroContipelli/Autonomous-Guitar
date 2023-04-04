@@ -7,7 +7,7 @@ import time
 from LookupTables import human_notes, servo_label, play_servos
 from Servo_Controller import servo_write, alignment
 
-play_file = "TetrisModified_Output"
+play_file = "AllNotesTest_Output"
 num_servos = 30
 servo_states = [0] + [-1]*24 + [0]*6
 timeouts = [0 for i in range(num_servos-6+1)]
