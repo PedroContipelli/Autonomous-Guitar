@@ -1,5 +1,6 @@
-import Libraries.ftp
-import play
+#import ESP32.Libraries.ftp
+import socket
+#import ESP32.play
 def server_front():
     html = """
 <head>
@@ -10,22 +11,22 @@ def server_front():
     <h2>Self-playing guitar</h2>
     <p>
         <a href=\"?play\"<button>Play</button></a>
-    </p>
-    <p>
         <a href=\"?upload\"><button>Upload</button></a>
+        <a href=\"?stop\"><button>Stop</button></a>
     </p>
 </body>
 </html>"""
     return html
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('', 80))
 s.listen(5)
 
 while True:
     try:
         start = 0;
-        ftp.ftpserver(21)
+        #ESP32.Libraries.ftp.ftpserver()
         if gc.mem_free() < 102000:
             gc.collect()
         conn, addr = s.accept()
@@ -36,8 +37,9 @@ while True:
         request = str(request)
         print('Get Request Content = %s' % request)
         start = request.find('/?play')
-        if start == 6:
-            play.main()
+        # can be uncommented when connected to the guitar
+        #if start == 6:            
+            #ESP32.play.main()
         response = server_front()
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-type: text/html\n')
