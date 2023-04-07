@@ -8,7 +8,7 @@ file_list = os.listdir(path)
 all_songs = [file_name[:-4] for file_name in file_list]
 
 input_songs = all_songs
-# input_songs = ['AlanWalkerFaded', 'BoulevardModified', 'CrazyTrainIntro']
+# input_songs = ['MinecraftSweden']
 
 for input_song in input_songs:
     print(f'Preprocessing {input_song}...', f'\t\t\t\tSlowed down {slowdown_factor.get(input_song,1.2)}x')

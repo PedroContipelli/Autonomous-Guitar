@@ -124,7 +124,7 @@ slowdown_factor = {
     "Twinkle": 1,
     "UnderTheSeaModified": 1.15,
     "VivaLaVida": 1.1,
-    "Mario": 1.3,
+    "Mario": 1.5,
     "AlanWalkerFaded": 1.0
 }
 
@@ -133,7 +133,9 @@ short_note_ticks = {
     "CountryRoads": 40,
     "Rickroll": 100,
     "VivaLaVida": 30,
-    "CrazyTrainIntro": 30
+    "CrazyTrainIntro": 30,
+    "EncoreIntro": 25,
+    "MinecraftSweden": 25
 }
 
 # Note : [Fret Motor , String Motor]
