@@ -1,20 +1,28 @@
+import os
 import mido
 from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
 from ESP32.LookupTables import slowdown_factor, short_note_ticks
 
-# input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida', 'HappyBirthday', 'OdeToJoy', 'SmokeOnTheWater', 'Stairway']
-input_filenames = ['Stairway']
-# Mario never worked
+path = "./Input_MIDIs"
+file_list = os.listdir(path)
+all_songs = [file_name[:-4] for file_name in file_list]
 
-for input_filename in input_filenames:
-    print(f'Preprocessing {input_filename}...', f'\t\t\t\tSlowed down {slowdown_factor.get(input_filename,1.2)}x')
-    input_file = mido.MidiFile(f'Input_MIDIs/{input_filename}.mid')
+input_songs = all_songs
+# input_songs = ['AlanWalkerFaded', 'BoulevardModified', 'CrazyTrainIntro']
 
-    all_tracks = mido.merge_tracks(input_file.tracks)
-    best_shift = find_best_shift(all_tracks)
+for input_song in input_songs:
+    print(f'Preprocessing {input_song}...', f'\t\t\t\tSlowed down {slowdown_factor.get(input_song,1.2)}x')
+    input_file = mido.MidiFile(f'Input_MIDIs/{input_song}.mid')
 
-    kept_tracks = remove_muted_tracks(input_filename, input_file.tracks)
-    input_track = mido.merge_tracks(kept_tracks)
+    try:
+        all_tracks = mido.merge_tracks(input_file.tracks)
+        best_shift = find_best_shift(all_tracks)
+
+        kept_tracks = remove_muted_tracks(input_song, input_file.tracks)
+        input_track = mido.merge_tracks(kept_tracks)
+    except:
+        best_shift = find_best_shift(input_file.tracks[0])
+        input_track = input_file.tracks[0]
 
     output_track = mido.MidiTrack()
     # [Program=25] sets instrument to "acoustic guitar (steel string)"
@@ -59,10 +67,10 @@ for input_filename in input_filenames:
         output_track.append(mido.Message('note_off', note=off_note, time=wait_first))
         wait_first = 0
 
-    output_track = remove_short_notes(output_track, shorter_than_ticks=short_note_ticks.get(input_filename,50))
+    output_track = remove_short_notes(output_track, shorter_than_ticks=short_note_ticks.get(input_song, 50))
 
     output_file = mido.MidiFile()
-    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor.get(input_filename,1.2))
+    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor.get(input_song, 1.2))
 
     output_file.tracks.append(output_track)
-    output_file.save(f'Output_MIDIs/{input_filename}_Output.mid')
+    output_file.save(f'Output_MIDIs/{input_song}_Output.mid')

@@ -123,14 +123,17 @@ slowdown_factor = {
     "TetrisModified": 1.1,
     "Twinkle": 1,
     "UnderTheSeaModified": 1.15,
-    "VivaLaVida": 1.1
+    "VivaLaVida": 1.1,
+    "Mario": 1.3,
+    "AlanWalkerFaded": 1.0
 }
 
 short_note_ticks = {
     "Aladdin": 100,
     "CountryRoads": 40,
     "Rickroll": 100,
-    "VivaLaVida": 30
+    "VivaLaVida": 30,
+    "CrazyTrainIntro": 30
 }
 
 # Note : [Fret Motor , String Motor]
