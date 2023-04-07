@@ -68,7 +68,7 @@ def find_best_shift(track):
     return "ERROR"
 
 def remove_muted_tracks(input_filename, input_tracks):
-    for mute_track in sorted(mute_tracks.get(input_filename), reverse=True):
+    for mute_track in sorted(mute_tracks.get(input_filename, []), reverse=True):
         del input_tracks[mute_track]
     return input_tracks
 

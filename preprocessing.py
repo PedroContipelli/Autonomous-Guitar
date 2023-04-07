@@ -2,11 +2,12 @@ import mido
 from utils import clamp, string_of, is_note_off, is_note_on, compress_outliers, find_best_shift, remove_muted_tracks, remove_short_notes
 from ESP32.LookupTables import slowdown_factor, short_note_ticks
 
-input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida', 'HappyBirthday', 'OdeToJoy', 'SmokeOnTheWater']
-# input_filenames = ['Mario']
+# input_filenames = ['Africa', 'Aladdin', 'AllNotesTest', 'CountryRoads', 'Mii', 'OverlappingNotesTest', 'Pirates', 'Rickroll', 'Simpsons', 'StillDre', 'Tetris', 'TetrisModified', 'Twinkle', 'UnderTheSea', 'UnderTheSeaModified', 'VivaLaVida', 'HappyBirthday', 'OdeToJoy', 'SmokeOnTheWater', 'Stairway']
+input_filenames = ['Stairway']
+# Mario never worked
 
 for input_filename in input_filenames:
-    print(f'Preprocessing {input_filename}...', f'\t\t\t\tSlowed down {slowdown_factor[input_filename]}x')
+    print(f'Preprocessing {input_filename}...', f'\t\t\t\tSlowed down {slowdown_factor.get(input_filename,1.2)}x')
     input_file = mido.MidiFile(f'Input_MIDIs/{input_filename}.mid')
 
     all_tracks = mido.merge_tracks(input_file.tracks)
@@ -58,10 +59,10 @@ for input_filename in input_filenames:
         output_track.append(mido.Message('note_off', note=off_note, time=wait_first))
         wait_first = 0
 
-    output_track = remove_short_notes(output_track, shorter_than_ticks=short_note_ticks[input_filename])
+    output_track = remove_short_notes(output_track, shorter_than_ticks=short_note_ticks.get(input_filename,50))
 
     output_file = mido.MidiFile()
-    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor[input_filename])
+    output_file.ticks_per_beat = int(input_file.ticks_per_beat / slowdown_factor.get(input_filename,1.2))
 
     output_file.tracks.append(output_track)
     output_file.save(f'Output_MIDIs/{input_filename}_Output.mid')
