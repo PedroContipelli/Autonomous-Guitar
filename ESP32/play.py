@@ -7,7 +7,7 @@ import time
 from LookupTables import human_notes, servo_label, play_servos
 from Servo_Controller import servo_write, alignment
 
-play_file = "AllNotesTest_Output"
+play_file = "Africa_Output"
 num_servos = 30
 servo_states = [0] + [-1]*24 + [0]*6
 timeouts = [0 for i in range(num_servos-6+1)]
@@ -17,13 +17,13 @@ last_fret_played_on = {25:0, 26:0, 27:0, 28:0, 29:0, 30:0}
 def main():
     alignment()
     time.sleep(2)
-    
+    # and msg.note != 62 and msg.note != 67
     for msg in MidiFile(f"Play_MIDIs/{play_file}.mid").play():
         if msg.status == NOTE_ON:
             play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
 
-    time.sleep(3)
-    event_queue_timeout_check()
+    time.sleep(1)
+    alignment()
 
 def play_guitar_note(note, print_human_notes=False, debug=False):
     
@@ -48,6 +48,9 @@ def play_guitar_note(note, print_human_notes=False, debug=False):
                 
     # IDEA: FRET MOTORS ARE CLOSER TO FRETS AND STRUMS NEED LARGER ANGLE TO REACH
     # PROVIDES MECHANICAL DELAY FOR FRETTING BEFORE STRUMMING
+    
+    # WRITE ALL SERVOS
+    servo_write(servo_states)
 
     # STRUM
     servo_states[new_strum] = 1 - servo_states[new_strum]

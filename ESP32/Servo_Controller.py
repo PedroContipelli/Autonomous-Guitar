@@ -21,26 +21,17 @@ up_angles   = [0]  +  [170] * 24  +  [160] * 6
 down_angles = [0]  +  [80] * 24  +  [120] * 6
 
 # Special frets
-special_frets = [1, 2, 5, 6, 7, 8, 9, 11]
-for special in special_frets:
-    up_angles[special] -= 15
-
-up_angles[18] = 190
-up_angles[3] = 190
-down_angles[1] = 95
-down_angles[4] = 105
-down_angles[7] = 95
-down_angles[13] = 105
 
 # Special strums
 up_angles[29] = 170
+up_angles[27] += 15
 up_angles[26], down_angles[26] = 170, 130
 down_angles[28] -= 10
 
 def main_test():
     alignment()
-    test_range(25,30,wait_between=1)
-    # WRITE MY OWN all_notes_test()
+    time.sleep(3)
+    test_range(1, 24, wait_between=2, repeats=2)
     # pass
 
 def servo_write(servo_states):
@@ -50,19 +41,20 @@ def servo_write(servo_states):
 def alignment():
     test_range(1, 30, wait_between=0.15, align=True)
 
-def test_range(min, max, wait_between=0.5, align=False):
+def test_range(min, max, wait_between=0.5, align=False, repeats=1):
     for servo in range(min, max+1):
-        if not align:
-            print(f"DOWN {servo}")
-            set_servo_state(servo, 1)
+        for repeat in range(repeats):
+            if not align:
+                print(f"DOWN {servo}")
+                set_servo_state(servo, 1)
+                time.sleep(wait_between)
+
+            print(f"UP {servo}")
+            set_servo_state(servo, 0)
             time.sleep(wait_between)
 
-        print(f"UP {servo}")
-        set_servo_state(servo, 0)
-        time.sleep(wait_between)
-
-        print(f"RELEASE {servo}\n")
-        set_servo_state(servo, -1)
+            print(f"RELEASE {servo}\n")
+            set_servo_state(servo, -1)
 
 def all_notes_test(wait_between=3.0):
     strings = [30, 29, 28, 27, 26, 25]

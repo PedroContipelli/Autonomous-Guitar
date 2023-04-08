@@ -2,30 +2,30 @@
 # CHANGE LEFT COLUMN ONLY
 
 servo_to_port = {
-    2 : 1,
-    3 : 2,
-    1 : 3,
-    5 : 4,
-    4 : 5,
-    6 : 6,
+    3 : 1,
+    6 : 2,
+    4 : 3,
+    1 : 4,
+    2 : 5,
+    5 : 6,
     10 : 7,
-    12 : 8,
-    7 : 9,
-    9 : 10,
-    11 : 11,
+    9 : 8,
+    12 : 9,
+    11 : 10,
+    7 : 11,
     8 : 12,
-    17 : 13,
-    16 : 14,
-    14 : 15,
+    15 : 13,
+    14 : 14,
+    17 : 15,
     13 : 16,
     18 : 17,
-    15 : 18,
+    16 : 18,
     21 : 19,
-    22 : 20,
-    20 : 21,
-    19 : 22,
+    20 : 20,
+    19 : 21,
+    24 : 22,
     23 : 23,
-    24 : 24,
+    22 : 24,
     26 : 25,
     28 : 26,
     25 : 27,
@@ -123,19 +123,14 @@ slowdown_factor = {
     "TetrisModified": 1.1,
     "Twinkle": 1,
     "UnderTheSeaModified": 1.15,
-    "VivaLaVida": 1.1,
-    "Mario": 1.5,
-    "AlanWalkerFaded": 1.0
+    "VivaLaVida": 1.1
 }
 
 short_note_ticks = {
     "Aladdin": 100,
     "CountryRoads": 40,
     "Rickroll": 100,
-    "VivaLaVida": 30,
-    "CrazyTrainIntro": 30,
-    "EncoreIntro": 25,
-    "MinecraftSweden": 25
+    "VivaLaVida": 30
 }
 
 # Note : [Fret Motor , String Motor]
