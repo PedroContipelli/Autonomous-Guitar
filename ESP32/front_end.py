@@ -1,6 +1,6 @@
 import socket
 import ESP32.Generate_list
-#import ESP32.play
+import ESP32.play_test
 
 def server_front():
     html_file = open("ESP32/midi_list.html")
@@ -27,11 +27,16 @@ while True:
         conn.settimeout(None)
         request = str(request)
         print('Get Request Content = %s' % request)
-        start = request.find('/?play')
-        
-        # Uncomment when connected to the guitar
-#        if start == 6:            
-#            ESP32.play.main()
+        start_condition = request.find('?play')
+        print(start_condition)
+        if start_condition > 10 and start_condition < 100:
+            start = request.split('?')
+            temp = start[0]
+            temp1 = temp.split('/')
+            decision = temp1[1]
+            print(decision)
+            # Uncomment when connected to the guitar       
+            ESP32.play_test.main(decision)
         response = server_front()
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-type: text/html\n')

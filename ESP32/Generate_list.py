@@ -24,18 +24,25 @@ def Midi_select():
 <select name="songs" id="songs">
 """
     file.write(cHTML)
+    file.write("    <option value=\"Song Select\" href=\"/Song select\"></a>")
     i = 1
     for s in MIDI_list:
         file.write("    <option value=\""+ str(s) + "\" href=\"/?" + str(s) + "\"></a>")
+        print("    <option value=\""+ str(s) + "\" href=\"/?" + str(s) + "\"></a>")
         file.write(s)
         file.write("</option>")
         file.write("\n")
         i = i + 1
     cHTML2 = """
 </select>
-<input type="submit" value="Submit" />
 <br><br>
-
+<script>
+    document.getElementById("songs").onchange = function() {
+        if (this.selectedIndex !== 0) {
+            window.location.href = this.value;
+        }
+    };
+</script>
 <label for="myfile">Select a file:</label>
 <input type="file" id="myfile" name="myfile">
 <button>Upload MIDI</button>
