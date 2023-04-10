@@ -14,11 +14,11 @@ timeouts = [0 for i in range(num_servos-6+1)]
 delay_ms = 500
 last_fret_played_on = {25:0, 26:0, 27:0, 28:0, 29:0, 30:0}
 
-def main():
+def main(song):
     alignment()
     time.sleep(2)
     # and msg.note != 62 and msg.note != 67
-    for msg in MidiFile(f"Play_MIDIs/{play_file}.mid").play():
+    for msg in MidiFile(f"Play_MIDIs/{song}").play():
         if msg.status == NOTE_ON:
             play_guitar_note(note=msg.note, print_human_notes=True, debug=False)
 
