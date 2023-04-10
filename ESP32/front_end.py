@@ -1,4 +1,6 @@
+# import ESP32.Libraries.ftp
 import socket
+import ESP32.play
 import ESP32.Generate_list
 import ESP32.play_test
 
@@ -6,20 +8,21 @@ def server_front():
     html_file = open("ESP32/midi_list.html")
     html = html_file.read()
     html_file.close()
+
     return html
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('', 80))
 s.listen(5)
-ESP32.Generate_list.Midi_select()
+
 while True:
     try:
-        
         start = 0;
+        # ESP32.Libraries.ftp.ftpserver()
         if gc.mem_free() < 102000:
             gc.collect()
-        #print("Frontend running...")
+        print("Frontend running...")
         conn, addr = s.accept()
         conn.settimeout(3.0)
         print('Received HTTP GET connection request from %s' % str(addr))
@@ -27,6 +30,7 @@ while True:
         conn.settimeout(None)
         request = str(request)
         print('Get Request Content = %s' % request)
+
         start_condition = request.find('?play')
         print(start_condition)
         if start_condition > 10 and start_condition < 100:
@@ -35,8 +39,8 @@ while True:
             temp1 = temp.split('/')
             decision = temp1[1]
             print(decision)
-            # Uncomment when connected to the guitar       
             ESP32.play_test.main(decision)
+
         response = server_front()
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-type: text/html\n')
@@ -46,5 +50,3 @@ while True:
     except OSError as e:
         conn.close()
         print('Connection closed')
-        
-            

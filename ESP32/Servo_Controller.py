@@ -17,21 +17,29 @@ driver3 = Servos(i2c, address=0x42)
 driver4 = Servos(i2c, address=0x43)
 
                       # FRETS     # STRUMS
-up_angles   = [0]  +  [170] * 24  +  [160] * 6
+up_angles   = [0]  +  [165] * 24  +  [160] * 6
 down_angles = [0]  +  [80] * 24  +  [120] * 6
 
 # Special frets
+up_angles[4] += 10
+up_angles[9] += 5
+up_angles[15] -= 8
+up_angles[17] -= 8
+down_angles[20] -= 40; up_angles[20] -= 40; # Screwed up glued out of alignment
+up_angles[24] += 5
+
 
 # Special strums
-up_angles[29] = 170
-up_angles[27] += 15
-up_angles[26], down_angles[26] = 170, 130
-down_angles[28] -= 10
+down_angles[26] += 10; up_angles[26] += 10;
+down_angles[27] += 8 ; up_angles[27] += 15;
+down_angles[28] -= 5 ; up_angles[28] -= 10;
+down_angles[29] += 10; up_angles[29] += 18;
 
 def main_test():
     alignment()
     time.sleep(3)
-    test_range(1, 24, wait_between=2, repeats=2)
+    
+    test_range(1,1, wait_between=1.5, repeats=2)
     # pass
 
 def servo_write(servo_states):
@@ -39,15 +47,23 @@ def servo_write(servo_states):
         set_servo_state(servo, state)
 
 def alignment():
-    test_range(1, 30, wait_between=0.15, align=True)
+    for servo_group in range(1,30,6):
+        print(f"UP {servo_group}-{servo_group+5}")
+        for servo in range(servo_group, servo_group+6):
+            set_servo_state(servo, 0)
+        time.sleep(0.50)
+        
+        print(f"RELEASE {servo_group}-{servo_group+5}\n")
+        for servo in range(servo_group, servo_group+6):
+            set_servo_state(servo, -1)
+        time.sleep(0.10)
 
 def test_range(min, max, wait_between=0.5, align=False, repeats=1):
     for servo in range(min, max+1):
         for repeat in range(repeats):
-            if not align:
-                print(f"DOWN {servo}")
-                set_servo_state(servo, 1)
-                time.sleep(wait_between)
+            print(f"DOWN {servo}")
+            set_servo_state(servo, 1)
+            time.sleep(wait_between)
 
             print(f"UP {servo}")
             set_servo_state(servo, 0)
