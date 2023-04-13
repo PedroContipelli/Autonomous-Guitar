@@ -5,15 +5,15 @@ except:
     
 from machine import Pin
 import network
-
+import ESP32.front_end
 import esp
 esp.osdebug(None)
 
 import gc
 gc.collect()
 
-ssid = '**************'
-password = '****************'
+ssid = 'intanetalctsa'
+password = '4074062466'
 
 station = network.WLAN(network.STA_IF)
 
@@ -25,3 +25,4 @@ while station.isconnected() == False:
 
 print('Connection successful')
 print(station.ifconfig())
+ESP32.front_end.main()

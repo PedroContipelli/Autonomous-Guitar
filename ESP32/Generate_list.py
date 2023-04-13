@@ -8,7 +8,7 @@ def Midi_select():
 
 <HEAD>
 
-<TITLE>Autonomous Guitar</TITLE>
+<TITLE>Self-Playing Guitar</TITLE>
 
 </HEAD>
 
@@ -16,15 +16,17 @@ def Midi_select():
 
 <HR>
 
-<H1>Autonomous Guitar Project</H1>
-<H2>By Senior Design Group 42</H2>
+<H1>Self-Playing Guitar Project</H1>
+<H2>By Senior Design Group 30</H2>
 
 <label for="songs">Select a song:</label>
 
 <select name="songs" id="songs">
 """
     file.write(cHTML)
+    file.write("\n")
     file.write("    <option value=\"Song Select\" href=\"/Song select\"></a>")
+    file.write("\n")
     i = 1
     for s in MIDI_list:
         file.write("    <option value=\""+ str(s) + "\" href=\"/?" + str(s) + "\"></a>")
@@ -42,15 +44,13 @@ def Midi_select():
             window.location.href = this.value;
         }
     };
+    
+    
 </script>
-<label for="myfile">Select a file:</label>
-<input type="file" id="myfile" name="myfile">
-<button>Upload MIDI</button>
 
 <br><br>
 <a href="?play"><button>Play</button></a>
-<button>Pause</button>
-<button>Stop</button>
+
 
 <HR>
 
